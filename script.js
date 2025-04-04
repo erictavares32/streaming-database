@@ -6,7 +6,6 @@ const imageBase = "https://image.tmdb.org/t/p/w200";
 
 let mediaType = "movie";
 
-// UI Elements
 const searchInput = document.createElement("input");
 const typeSelect = document.createElement("select");
 const genreSelect = document.createElement("select");
@@ -28,7 +27,6 @@ searchInput.style.width = "60%";
 
 typeSelect.innerHTML = `<option value="movie">Movies</option><option value="tv">TV Shows</option>`;
 typeSelect.style.margin = "10px";
-
 genreSelect.style.margin = "10px";
 yearSelect.style.margin = "10px";
 countrySelect.style.margin = "10px";
@@ -97,96 +95,4 @@ async function fetchResults() {
     const data = await res.json();
     displayResults(data.results || []);
   } catch (e) {
-    console.error("TMDb error:", e);
-    resultsContainer.innerHTML = "<p>Error loading results.</p>";
-  }
-}
-
-// Display results
-async function displayResults(items) {
-  resultsContainer.innerHTML = "";
-  if (!items.length) {
-    resultsContainer.innerHTML = "<p>No results found.</p>";
-    return;
-  }
-
-  for (const item of items.slice(0, 10)) {
-    const card = document.createElement("div");
-    card.className = "movie";
-
-    const title = item.title || item.name;
-    const year = (item.release_date || item.first_air_date || "").slice(0, 4);
-    const poster = item.poster_path ? `${imageBase}${item.poster_path}` : "";
-
-    card.innerHTML = `
-      <h3>${title}</h3>
-      ${poster ? `<img src="${poster}" alt="${title}" />` : ""}
-      <p>${year}</p>
-      <div class="streams">Loading streaming info...</div>
-    `;
-
-    resultsContainer.appendChild(card);
-
-    const streamBox = card.querySelector(".streams");
-    const providers = await getStreaming(item.id);
-    if (providers.length) {
-      streamBox.innerHTML = `<strong>Available on:</strong><ul>${providers
-        .map((p) => `<li>${p.name}</li>`)
-        .join("")}</ul>`;
-    } else {
-      streamBox.innerHTML = "No streaming data found.";
-    }
-  }
-}
-
-// Watchmode API – get streaming sources
-async function getStreaming(tmdbId) {
-  try {
-    const match = await fetch(
-      `${watchmodeBase}/search/?apiKey=${watchmodeApiKey}&search_field=tmdb_id&search_value=${tmdbId}`
-    );
-    const matchData = await match.json();
-    const found = matchData.title_results[0];
-    if (!found) return [];
-
-    const sourcesRes = await fetch(
-      `${watchmodeBase}/title/${found.id}/sources/?apiKey=${watchmodeApiKey}`
-    );
-    const sources = await sourcesRes.json();
-
-    // Filter for subscription services
-    const filtered = sources.filter(
-      (s) => s.type === "sub" || s.type === "free"
-    );
-
-    // Remove duplicates
-    const seen = new Set();
-    return filtered.filter((s) => {
-      if (seen.has(s.name)) return false;
-      seen.add(s.name);
-      return true;
-    });
-  } catch (err) {
-    console.warn("Watchmode error", err);
-    return [];
-  }
-}
-
-// Events
-searchInput.addEventListener("input", () => {
-  clearTimeout(window._searchDelay);
-  window._searchDelay = setTimeout(fetchResults, 500);
-});
-
-typeSelect.addEventListener("change", () => {
-  mediaType = typeSelect.value;
-  loadGenres().then(fetchResults);
-});
-genreSelect.addEventListener("change", fetchResults);
-yearSelect.addEventListener("change", fetchResults);
-countrySelect.addEventListener("change", fetchResults);
-
-// Init
-loadGenres();
-loadCountries();
-fetchResults();
+    console.error("TMDb error
