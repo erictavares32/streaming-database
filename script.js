@@ -1,6 +1,5 @@
 const tmdbApiKey = "8015f104741271883e610d9c704183e4";
 const watchmodeApiKey = "NgObMKWGQPhz4UH6Zs8xwidmsw6s8JZdRstAbtio";
-
 const tmdbBase = "https://api.themoviedb.org/3";
 const watchmodeBase = "https://api.watchmode.com/v1";
 const imageBase = "https://image.tmdb.org/t/p/w200";
