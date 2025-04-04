@@ -1,7 +1,6 @@
 const apiKey = "8015f104741271883e610d9c704183e4";
 const apiBase = "https://api.themoviedb.org/3";
 const imageBase = "https://image.tmdb.org/t/p/w200";
-
 const searchInput = document.createElement("input");
 searchInput.placeholder = "Search for movies...";
 searchInput.style.padding = "10px";
