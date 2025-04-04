@@ -1,16 +1,37 @@
+const tmdbApiKey = "8015f104741271883e610d9c704183e4";  // Replace with your TMDb API Key
 const rapidApiKey = "9a3cca925dmsha133c7c1b3afc32p16c631jsn210637e396df";  // Your RapidAPI Key
 
-// Function to fetch streaming availability based on TMDb ID
-async function fetchStreamingData() {
-    const tmdbId = document.getElementById("tmdbId").value;  // Get the TMDb ID entered by the user
-    const type = "tv";  // Change this to 'movie' if searching for a movie
-
-    if (!tmdbId) {
-        alert("Please enter a TMDb ID.");
+// Function to fetch TMDb ID based on the movie/show name
+async function fetchTmdbId() {
+    const searchQuery = document.getElementById("search").value;
+    if (!searchQuery) {
+        alert("Please enter a movie or TV show name.");
         return;
     }
 
-    const url = `https://streaming-availability.p.rapidapi.com/shows/${type}/${tmdbId}`;  // Replace with RapidAPI URL
+    const tmdbUrl = `https://api.themoviedb.org/3/search/multi?api_key=${tmdbApiKey}&query=${encodeURIComponent(searchQuery)}&language=en-US&page=1`;
+
+    try {
+        const tmdbResponse = await fetch(tmdbUrl);
+        const tmdbData = await tmdbResponse.json();
+
+        if (tmdbData.results.length > 0) {
+            const tmdbId = tmdbData.results[0].id;  // Get the TMDb ID of the first result (you can adjust for accuracy)
+            console.log("TMDb ID:", tmdbId);
+            fetchStreamingData(tmdbId);  // Pass the TMDb ID to fetch streaming data
+        } else {
+            alert("No results found for this search.");
+        }
+    } catch (error) {
+        console.error("Error fetching TMDb data:", error);
+        alert("There was an error fetching data from TMDb.");
+    }
+}
+
+// Function to fetch streaming data using RapidAPI with the TMDb ID
+async function fetchStreamingData(tmdbId) {
+    const type = "tv";  // Use 'movie' for movies or 'tv' for TV shows
+    const url = `https://streaming-availability.p.rapidapi.com/shows/${type}/${tmdbId}`;
 
     try {
         const response = await fetch(url, {
