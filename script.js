@@ -1,3 +1,5 @@
+// script.js
+
 const tmdbApiKey = "8015f104741271883e610d9c704183e4";
 const watchmodeApiKey = "NgObMKWGQPhz4UH6Zs8xwidmsw6s8JZdRstAbtio";
 
@@ -68,18 +70,26 @@ async function loadGenres() {
   });
 }
 
-async function fetchResults() {
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+const fetchResults = debounce(async () => {
   const query = searchInput.value.trim();
   const genre = genreSelect.value;
   const year = yearSelect.value;
   const region = countrySelect.value;
 
-  let url;
-  if (query) {
-    url = `${tmdbBase}/search/${mediaType}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}`;
-  } else {
-    url = `${tmdbBase}/trending/${mediaType}/week?api_key=${tmdbApiKey}`;
+  if (!query) {
+    resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
+    return;
   }
+
+  let url = `${tmdbBase}/search/${mediaType}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}&page=1`;
 
   if (genre) url += `&with_genres=${genre}`;
   if (year) url += `&primary_release_year=${year}`;
@@ -88,12 +98,12 @@ async function fetchResults() {
   try {
     const res = await fetch(url);
     const data = await res.json();
-    displayResults(data.results || []);
+    displayResults(data.results.slice(0, 2)); // Limit to 2 results
   } catch (e) {
     console.error("TMDb error:", e);
     resultsContainer.innerHTML = "<p>Error loading results.</p>";
   }
-}
+}, 1000); // Debounce delay of 1 second
 
 async function displayResults(items) {
   resultsContainer.innerHTML = "";
@@ -102,7 +112,7 @@ async function displayResults(items) {
     return;
   }
 
-  for (const item of items.slice(0, 10)) {
+  for (const item of items) {
     const card = document.createElement("div");
     card.className = "movie";
 
@@ -134,7 +144,7 @@ async function displayResults(items) {
 async function getStreaming(tmdbId) {
   try {
     const match = await fetch(
-      `${watchmodeBase}/search/?apiKey=${watchmodeApiKey}&search_field=tmdb_id&search_value=${tmdbId}&search_type=${mediaType}`
+      `${watchmodeBase}/search/?apiKey=${watchmodeApiKey}&search_field=tmdb_id&search_value=${tmdbId}`
     );
     const matchData = await match.json();
     const found = matchData.title_results[0];
@@ -161,10 +171,7 @@ async function getStreaming(tmdbId) {
   }
 }
 
-searchInput.addEventListener("input", () => {
-  clearTimeout(window._searchDelay);
-  window._searchDelay = setTimeout(fetchResults, 500);
-});
+searchInput.addEventListener("input", fetchResults);
 typeSelect.addEventListener("change", () => {
   mediaType = typeSelect.value;
   loadGenres().then(fetchResults);
@@ -175,4 +182,3 @@ countrySelect.addEventListener("change", fetchResults);
 
 loadGenres();
 loadCountries();
-fetchResults();
