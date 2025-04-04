@@ -5,13 +5,10 @@ body {
   padding: 2rem;
 }
 
-h1 {
-  color: #333;
+input, select {
+  font-size: 16px;
 }
 
-p {
-  color: #666;
-}
 .movies {
   display: flex;
   flex-wrap: wrap;
@@ -32,3 +29,9 @@ p {
   max-width: 100%;
   border-radius: 8px;
 }
+
+.movie h3 {
+  font-size: 16px;
+  margin: 0.5rem 0;
+}
+
