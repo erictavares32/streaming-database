@@ -12,3 +12,23 @@ h1 {
 p {
   color: #666;
 }
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.movie {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 150px;
+}
+
+.movie img {
+  max-width: 100%;
+  border-radius: 8px;
+}
