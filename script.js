@@ -75,30 +75,14 @@ async function fetchResults() {
       card.appendChild(title);
 
       const sourceList = document.createElement("ul");
-      const filteredSources = sources.filter(src => src.region && src.name && src.web_url);
+      const filteredSources = sources.filter(src => src.name && src.web_url);
       if (filteredSources.length > 0) {
         filteredSources.forEach(source => {
           const li = document.createElement("li");
-          li.innerHTML = `<strong>[${source.region}]</strong> <a href="${source.web_url}" target="_blank">${source.name}</a>`;
+          li.innerHTML = `<strong>${source.name}</strong> <a href="${source.web_url}" target="_blank">Watch here</a>`;
           sourceList.appendChild(li);
         });
       } else {
         const li = document.createElement("li");
         li.textContent = "No streaming data found.";
         sourceList.appendChild(li);
-      }
-
-      card.appendChild(sourceList);
-      resultsContainer.appendChild(card);
-    }
-  } catch (error) {
-    console.error(error);
-    resultsContainer.innerHTML = "<p>Error fetching data.</p>";
-  }
-}
-
-searchInput.addEventListener("input", fetchResults);
-typeSelect.addEventListener("change", () => {
-  mediaType = typeSelect.value;
-  fetchResults();
-});
