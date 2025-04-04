@@ -14,15 +14,15 @@ const yearSelect = document.createElement("select");
 const countrySelect = document.createElement("select");
 const resultsContainer = document.createElement("div");
 
-document.body.prepend(countrySelect);
-document.body.prepend(yearSelect);
-document.body.prepend(genreSelect);
-document.body.prepend(typeSelect);
-document.body.prepend(searchInput);
-document.body.appendChild(resultsContainer);
+const app = document.getElementById("app");
+app.appendChild(typeSelect);
+app.appendChild(searchInput);
+app.appendChild(genreSelect);
+app.appendChild(yearSelect);
+app.appendChild(countrySelect);
+app.appendChild(resultsContainer);
 
 searchInput.placeholder = "Search Movies or TV Shows";
-searchInput.style.padding = "10px";
 searchInput.style.margin = "10px";
 searchInput.style.width = "60%";
 
@@ -34,7 +34,6 @@ countrySelect.style.margin = "10px";
 
 resultsContainer.className = "movies";
 
-// Year filter
 const now = new Date().getFullYear();
 yearSelect.innerHTML = `<option value="">All Years</option>`;
 for (let y = now; y >= 1950; y--) {
@@ -44,13 +43,10 @@ for (let y = now; y >= 1950; y--) {
   yearSelect.appendChild(opt);
 }
 
-// Country list
 async function loadCountries() {
   const res = await fetch("https://restcountries.com/v3.1/all");
   const countries = await res.json();
-  const sorted = countries.sort((a, b) =>
-    a.name.common.localeCompare(b.name.common)
-  );
+  const sorted = countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
   countrySelect.innerHTML = `<option value="">All Countries</option>`;
   sorted.forEach((c) => {
     const opt = document.createElement("option");
@@ -60,7 +56,6 @@ async function loadCountries() {
   });
 }
 
-// Genre list
 async function loadGenres() {
   const res = await fetch(`${tmdbBase}/genre/${mediaType}/list?api_key=${tmdbApiKey}`);
   const data = await res.json();
@@ -73,7 +68,6 @@ async function loadGenres() {
   });
 }
 
-// Fetch results
 async function fetchResults() {
   const query = searchInput.value.trim();
   const genre = genreSelect.value;
@@ -101,7 +95,6 @@ async function fetchResults() {
   }
 }
 
-// Display results
 async function displayResults(items) {
   resultsContainer.innerHTML = "";
   if (!items.length) {
@@ -138,7 +131,6 @@ async function displayResults(items) {
   }
 }
 
-// ✅ Watchmode Streaming Info (fixed)
 async function getStreaming(tmdbId) {
   try {
     const match = await fetch(
@@ -169,7 +161,6 @@ async function getStreaming(tmdbId) {
   }
 }
 
-// Events
 searchInput.addEventListener("input", () => {
   clearTimeout(window._searchDelay);
   window._searchDelay = setTimeout(fetchResults, 500);
@@ -182,7 +173,6 @@ genreSelect.addEventListener("change", fetchResults);
 yearSelect.addEventListener("change", fetchResults);
 countrySelect.addEventListener("change", fetchResults);
 
-// Init
 loadGenres();
 loadCountries();
 fetchResults();
