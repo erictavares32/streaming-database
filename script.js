@@ -1,4 +1,4 @@
-const apiKey = "8015f104741271883e610d9c704183e4"; // <-- Replace with your actual key
+const apiKey = "8015f104741271883e610d9c704183e4";
 const apiUrl = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
 
 async function fetchTrendingMovies() {
