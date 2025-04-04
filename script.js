@@ -1,7 +1,7 @@
 // script.js
 
-const tmdbApiKey = "8015f104741271883e610d9c704183e4";
-const watchmodeApiKey = "NgObMKWGQPhz4UH6Zs8xwidmsw6s8JZdRstAbtio ";
+const tmdbApiKey = "8015f104741271883e610d9c704183e4"; // 
+const watchmodeApiKey = "NgObMKWGQPhz4UH6Zs8xwidmsw6s8JZdRstAbtio"; // Already good
 
 const tmdbBase = "https://api.themoviedb.org/3";
 const watchmodeBase = "https://api.watchmode.com/v1";
@@ -13,7 +13,6 @@ const searchInput = document.createElement("input");
 const typeSelect = document.createElement("select");
 const genreSelect = document.createElement("select");
 const yearSelect = document.createElement("select");
-const countrySelect = document.createElement("select");
 const resultsContainer = document.createElement("div");
 
 const app = document.getElementById("app");
@@ -21,7 +20,6 @@ app.appendChild(typeSelect);
 app.appendChild(searchInput);
 app.appendChild(genreSelect);
 app.appendChild(yearSelect);
-app.appendChild(countrySelect);
 app.appendChild(resultsContainer);
 
 searchInput.placeholder = "Search Movies or TV Shows";
@@ -32,7 +30,6 @@ typeSelect.innerHTML = `<option value="movie">Movies</option><option value="tv">
 typeSelect.style.margin = "10px";
 genreSelect.style.margin = "10px";
 yearSelect.style.margin = "10px";
-countrySelect.style.margin = "10px";
 
 resultsContainer.className = "movies";
 
@@ -43,19 +40,6 @@ for (let y = now; y >= 1950; y--) {
   opt.value = y;
   opt.textContent = y;
   yearSelect.appendChild(opt);
-}
-
-async function loadCountries() {
-  const res = await fetch("https://restcountries.com/v3.1/all");
-  const countries = await res.json();
-  const sorted = countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
-  countrySelect.innerHTML = `<option value="">All Countries</option>`;
-  sorted.forEach((c) => {
-    const opt = document.createElement("option");
-    opt.value = c.cca2;
-    opt.textContent = c.name.common;
-    countrySelect.appendChild(opt);
-  });
 }
 
 async function loadGenres() {
@@ -82,7 +66,6 @@ const fetchResults = debounce(async () => {
   const query = searchInput.value.trim();
   const genre = genreSelect.value;
   const year = yearSelect.value;
-  const region = countrySelect.value;
 
   if (!query) {
     resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
@@ -90,20 +73,18 @@ const fetchResults = debounce(async () => {
   }
 
   let url = `${tmdbBase}/search/${mediaType}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}&page=1`;
-
   if (genre) url += `&with_genres=${genre}`;
   if (year) url += `&primary_release_year=${year}`;
-  if (region) url += `&region=${region}`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
-    displayResults(data.results.slice(0, 2)); // Limit to 2 results
+    displayResults(data.results.slice(0, 2)); // Max 2 results
   } catch (e) {
     console.error("TMDb error:", e);
     resultsContainer.innerHTML = "<p>Error loading results.</p>";
   }
-}, 1000); // Debounce delay of 1 second
+}, 1000);
 
 async function displayResults(items) {
   resultsContainer.innerHTML = "";
@@ -132,8 +113,8 @@ async function displayResults(items) {
     const streamBox = card.querySelector(".streams");
     const providers = await getStreaming(item.id);
     if (providers.length) {
-      streamBox.innerHTML = `<strong>Available on:</strong><ul>${providers
-        .map((p) => `<li>${p.name}</li>`)
+      streamBox.innerHTML = `<strong>Streaming:</strong><ul>${providers
+        .map((p) => `<li>${p.name} (${p.region || "Global"})</li>`)
         .join("")}</ul>`;
     } else {
       streamBox.innerHTML = "No streaming data found.";
@@ -155,30 +136,12 @@ async function getStreaming(tmdbId) {
     );
     const sources = await sourcesRes.json();
 
+    // Return all sources (no country filter)
     const filtered = sources.filter(
       (s) => s.type === "sub" || s.type === "free"
     );
 
+    // Remove duplicates by name
     const seen = new Set();
     return filtered.filter((s) => {
-      if (seen.has(s.name)) return false;
-      seen.add(s.name);
-      return true;
-    });
-  } catch (err) {
-    console.warn("Watchmode error", err);
-    return [];
-  }
-}
-
-searchInput.addEventListener("input", fetchResults);
-typeSelect.addEventListener("change", () => {
-  mediaType = typeSelect.value;
-  loadGenres().then(fetchResults);
-});
-genreSelect.addEventListener("change", fetchResults);
-yearSelect.addEventListener("change", fetchResults);
-countrySelect.addEventListener("change", fetchResults);
-
-loadGenres();
-loadCountries();
+      if (seen.has(s.name))
