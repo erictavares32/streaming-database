@@ -86,3 +86,19 @@ async function fetchResults() {
         const li = document.createElement("li");
         li.textContent = "No streaming data found.";
         sourceList.appendChild(li);
+      }
+
+      card.appendChild(sourceList);
+      resultsContainer.appendChild(card);
+    }
+  } catch (error) {
+    console.error(error);
+    resultsContainer.innerHTML = "<p>Error fetching data.</p>";
+  }
+}
+
+searchInput.addEventListener("input", fetchResults);
+typeSelect.addEventListener("change", () => {
+  mediaType = typeSelect.value;
+  fetchResults();
+});
