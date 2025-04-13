@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Cybersecurity News | VPNFlix</title>
+    <style>
+        /* Modern Cyber Security Theme */
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            background-color: #0a0e17;
+            color: #e0e0e0;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .news-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1e88e5;
+        }
+        
+        .news-header h1 {
+            color: #1e88e5;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .news-header p {
+            color: #90caf9;
+            font-size: 1.1rem;
+        }
+        
+        #news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .news-card {
+            background: #1a237e;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #1e88e5;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(30, 136, 229, 0.3);
+            border-color: #42a5f5;
+        }
+        
+        .news-content {
+            padding: 20px;
+        }
+        
+        .news-title {
+            color: #bbdefb;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .news-date {
+            color: #90caf9;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .news-excerpt {
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .read-more {
+            display: inline-block;
+            background-color: #1e88e5;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .read-more:hover {
+            background-color: #42a5f5;
+            transform: translateY(-2px);
+        }
+        
+        .last-updated {
+            text-align: center;
+            margin-top: 30px;
+            color: #90caf9;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(30, 136, 229, 0.2);
+            border-top: 4px solid #1e88e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Error state */
+        .error-message {
+            text-align: center;
+            padding: 30px;
+            color: #ef5350;
+            grid-column: 1 / -1;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #news-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="news-header">
+        <h1>Latest Cybersecurity News</h1>
+        <p>Stay protected with real-time threat intelligence from The Hacker News</p>
+    </div>
+    
+    <div id="news-container">
+        <div class="loader">
+            <div class="spinner"></div>
+        </div>
+    </div>
+    
+    <p class="last-updated" id="last-updated"></p>
+
+    <script>
+        // Configuration with YOUR API KEY
+        const config = {
+            rssFeedUrl: "https://feeds.feedburner.com/TheHackersNews",
+            apiEndpoint: "https://api.rss2json.com/v1/api.json",
+            apiKey: "eyyyuhvyxn3182c4f41mxoq1t7knrmechkxj6nbi",
+            maxArticles: 6,
+            refreshInterval: 30 * 60 * 1000 // 30 minutes
+        };
+        
+        // DOM Elements
+        const newsContainer = document.getElementById("news-container");
+        const lastUpdated = document.getElementById("last-updated");
+        
+        // Sanitize HTML helper
+        function sanitizeHTML(str) {
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
+        // Truncate text
+        function truncate(text, chars = 150) {
+            return text.length > chars ? `${text.substring(0, chars)}...` : text;
+        }
+        
+        // Fetch and display news
+        async function fetchNews() {
+            try {
+                const response = await fetch(
+                    `${config.apiEndpoint}?rss_url=${encodeURIComponent(config.rssFeedUrl)}&api_key=${config.apiKey}`
+                );
+                
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                
+                const data = await response.json();
+                
+                if (data.status !== "ok" || !data.items) {
+                    throw new Error(data.message || "Invalid RSS feed data");
+                }
+                
+                displayNews(data.items.slice(0, config.maxArticles));
+                updateTimestamp();
+                
+            } catch (error) {
+                console.error("News fetch error:", error);
+                showError(error);
+            }
+        }
+        
+        // Display news articles
+        function displayNews(articles) {
+            let html = '';
+            
+            articles.forEach(article => {
+                html += `
+                    <div class="news-card">
+                        <div class="news-content">
+                            <h3 class="news-title">${sanitizeHTML(article.title)}</h3>
+                            <span class="news-date">${formatDate(article.pubDate)}</span>
+                            <p class="news-excerpt">${truncate(sanitizeHTML(article.description))}</p>
+                            <a href="${sanitizeHTML(article.link)}" class="read-more" target="_blank" rel="noopener noreferrer">
+                                Read More →
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            newsContainer.innerHTML = html;
+        }
+        
+        // Update last updated time
+        function updateTimestamp() {
+            const now = new Date();
+            lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()} | Source: The Hacker News`;
+        }
+        
+        // Show error state
+        function showError(error) {
+            newsContainer.innerHTML = `
+                <div class="error-message">
+                    <p>⚠️ Failed to load news feed</p>
+                    <p><small>${sanitizeHTML(error.message)}</small></p>
+                    <button onclick="window.location.reload()" style="
+                        background: #1e88e5;
+                        border: none;
+                        color: white;
+                        padding: 8px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    ">
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', fetchNews);
+        
+        // Auto-refresh
+        let refreshTimer = setInterval(fetchNews, config.refreshInterval);
+        
+        // Clear interval when tab is inactive to reduce API calls
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(refreshTimer);
+            } else {
+                refreshTimer = setInterval(fetchNews, config.refreshInterval);
+                fetchNews(); // Immediate refresh when returning to tab
+            }
+        });
+    </script>
+</body>
+</html>

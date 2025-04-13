@@ -1,0 +1,51 @@
+# vpnflix.xyz - Secure Robots.txt
+# Last Updated: 2025-04-11
+
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /cgi-bin/
+Disallow: /wp-admin/
+Disallow: /*.php$
+Disallow: /*.json$
+
+# Special Rules for Search Engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Block Bad Bots
+User-agent: MJ12bot
+Disallow: /
+User-agent: AhrefsBot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+
+# Block AI Scrapers
+User-agent: GPTBot
+Disallow: /
+User-agent: ChatGPT-User
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /
+
+# Security Protections
+Disallow: /*?*
+Disallow: /*.env$
+Disallow: /*.bak$
+Disallow: /*.sql$
+Disallow: /*.git/
+
+# Sitemap
+Sitemap: https://www.vpnflix.xyz/sitemap.xml
