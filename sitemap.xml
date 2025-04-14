@@ -53,6 +53,11 @@
     <lastmod>2025-04-13</lastmod>
     <changefreq>daily</changefreq>
   </url>
+    <url>
+    <loc>https://app.vpnflix.online</loc>
+    <lastmod>2025-04-14</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
   
   <!-- Legal Pages -->
   <url>
@@ -61,7 +66,7 @@
     <changefreq>yearly</changefreq>
   </url>
   <url>
-    <loc>https://www.vpnflix.online/terms-of-service</loc>
+    <loc>https://www.vpnflix.xyz/terms-of-service</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>yearly</changefreq>
   </url>
