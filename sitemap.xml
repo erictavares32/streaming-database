@@ -3,7 +3,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://www.vpnflix.xyz/</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,53 +11,50 @@
   <!-- Key Comparison Pages -->
   <url>
     <loc>https://www.vpnflix.xyz/nordvpn-vs-expressvpn-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.vpnflix.xyz/mullvad-vs-protonvpn-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vpnflix.xyz/nordvpn-vs-protonvpn-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vpnflix.xyz/Mullvad-vs-NordVPN-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.vpnflix.xyz/surfshark-vs-expressvpn-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <loc>https://www.vpnflix.xyz/Surfshark-vs-Expressvpn-2025</loc>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.vpnflix.xyz/surfshark-vs-nordvpn-2025</loc>
-    <lastmod>2025-04-11</lastmod>
+    <loc>https://www.vpnflix.xyz/nordvpn-vs-Surfshark-2025</loc>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.vpnflix.xyz/privacyguides</loc>
-    <lastmod>2025-04-12</lastmod>
+    <lastmod>2025-04-22</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://www.vpnflix.xyz/cybersecuritynews</loc>
-    <lastmod>2025-04-13</lastmod>
+    <lastmod>2025-04-12</lastmod>
     <changefreq>daily</changefreq>
   </url>
     <url>
-    <loc>https://app.vpnflix.online</loc>
-    <lastmod>2025-04-14</lastmod>
-    <changefreq>daily</changefreq>
-  </url>
+
   
   <!-- Legal Pages -->
   <url>
