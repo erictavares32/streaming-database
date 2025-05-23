@@ -1,7 +1,7 @@
 # VPNFlixOnline – The Ultimate VPN and Streaming Comparison Tool
 
 [![Visit www.vpnflix.online](https://img.shields.io/badge/Website-vpnflix.online-blue)](https://www.vpnflix.online)
-[![Visit the App](https://img.shields.io/badge/Try%20the%20App-wheretowatch.stream-green)](https://www.wheretowatch.stream)
+[![where to watch](https://img.shields.io/badge/Try%20the%20App-wheretowatch.stream-green)](https://www.wheretowatch.stream)
 
 ## 🌍 Unlock Streaming Potential with a VPN
 
@@ -19,7 +19,7 @@
 
 ## 🎬 Explore the App: [Streaming Comparison Tool](https://www.wheretowatch.stream)
 
-With the **[VPNFlixOnline App](https://www.wheretowatch.stream)**, you can:
+With the **[wheretowatch](https://www.wheretowatch.stream)**, you can:
 
 - See which countries have the **largest Netflix libraries**
 - **Find availability** of specific movies and TV shows by platform and region
